@@ -2,10 +2,15 @@ name: OXYFANN AI Agent
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  test:
+  run-bot:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
+
     steps:
       - name: Ambil kode
         uses: actions/checkout@v4
@@ -13,7 +18,13 @@ jobs:
       - name: Siapkan Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.11'
 
-      - name: Tes Python
+      - name: Instal library
+        run: pip install -r requirements.txt
+
+      - name: Jalankan OXYFANN AI
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python bot.py
